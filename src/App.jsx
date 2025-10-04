@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router";
+import CheckoutPage from "./pages/CheckoutPage";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 
@@ -7,18 +8,7 @@ function App() {
         <>
             <Routes>
                 <Route index element={<HomePage />} />
-                <Route
-                    path="/checkout"
-                    element={
-                        <div
-                            style={{
-                                color: "red",
-                                backgroundColor: "blue",
-                                zIndex: 99,
-                            }}>
-                            Test Checkout Page
-                        </div>
-                    } />
+                <Route path="/checkout" element={<CheckoutPage />} />
             </Routes>
             <HomePage />
         </>
