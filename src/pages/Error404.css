@@ -1,0 +1,81 @@
+/* Simple, modern 404 styles */
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #f7faf8 0%, #ffffff 100%);
+  padding: 40px 20px;
+}
+
+.error-card {
+  max-width: 760px;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(8, 79, 45, 0.08);
+  padding: 48px;
+  text-align: center;
+}
+
+.error-code {
+  font-size: 96px;
+  font-weight: 800;
+  color: rgb(8, 79, 45);
+  line-height: 1;
+}
+
+.error-message {
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.error-description {
+  margin-top: 12px;
+  color: #4b5563;
+  font-size: 15px;
+}
+
+.error-actions {
+  margin-top: 22px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.button-primary {
+  background: rgb(8, 79, 45);
+  color: white;
+}
+
+.button-secondary {
+  background: white;
+  color: rgb(8, 79, 45);
+  border: 1px solid rgba(8, 79, 45, 0.12);
+}
+
+@media (max-width: 600px) {
+  .error-card {
+    padding: 28px;
+  }
+
+  .error-code {
+    font-size: 72px;
+  }
+
+  .error-message {
+    font-size: 20px;
+  }
+}

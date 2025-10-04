@@ -1,13 +1,14 @@
 import { Header } from '../components/Header';
-import './OrdersPage.css'
+import './OrdersPage.css';
+import BuyAgain from "../assets/images/icons/buy-again.png";
 
 export function OrdersPage() { 
-
+ 
   return (
       <>
           <title>Orders</title>
+          <link rel="icon" type="image/svg+xml" href="/orders-favicon.png" />;
           <Header />
-
           <div class="orders-page">
               <div class="page-title">Your Orders</div>
 
@@ -47,10 +48,7 @@ export function OrdersPage() {
                               </div>
                               <div class="product-quantity">Quantity: 1</div>
                               <button class="buy-again-button button-primary">
-                                  <img
-                                      class="buy-again-icon"
-                                      src="images/icons/buy-again.png"
-                                  />
+                                  <img class="buy-again-icon" src={BuyAgain} />
                                   <span class="buy-again-message">
                                       Add to Cart
                                   </span>
@@ -78,10 +76,7 @@ export function OrdersPage() {
                               </div>
                               <div class="product-quantity">Quantity: 2</div>
                               <button class="buy-again-button button-primary">
-                                  <img
-                                      class="buy-again-icon"
-                                      src="images/icons/buy-again.png"
-                                  />
+                                  <img class="buy-again-icon" src={BuyAgain} />
                                   <span class="buy-again-message">
                                       Add to Cart
                                   </span>
@@ -133,10 +128,7 @@ export function OrdersPage() {
                               </div>
                               <div class="product-quantity">Quantity: 2</div>
                               <button class="buy-again-button button-primary">
-                                  <img
-                                      class="buy-again-icon"
-                                      src="images/icons/buy-again.png"
-                                  />
+                                  <img class="buy-again-icon" src={BuyAgain} />
                                   <span class="buy-again-message">
                                       Add to Cart
                                   </span>
