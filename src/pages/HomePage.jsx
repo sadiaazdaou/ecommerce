@@ -1,21 +1,29 @@
 import { Header } from "../components/Header";
 import { useEffect, useState } from "react";
-
+import axios from "axios";
 import "./HomePage.css";
 import Checkmark from "../assets/images/icons/checkmark.png";
 import RatingStars from "../components/RatingStars";
 
 function HomePage() {
     const [products, setProducts] = useState([]);
+    const [cart, setCart] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:3000/api/products")
-            .then((res) => res.json())
-            .then((data) => {
-                setProducts(data);
-                console.log(data);
-            })
-            .catch((err) => console.log(err));
+        axios.get("http://localhost:3000/api/products").then((response) => {
+            setProducts(response.data);
+        });
+        // fetch("http://localhost:3000/api/products")
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         setProducts(data);
+        //         console.log(data);
+        //     })
+        //     .catch((err) => console.log(err));
+        axios.get("http://localhost:3000/api/cart-items").then((response) => {
+            setCart(response.data);
+            console.log(response.data);
+        });
     }, []);
 
     const productsList = products.map((product) => {
@@ -31,8 +39,13 @@ function HomePage() {
 
                 <div className="product-rating-container">
                     <RatingStars value={product.rating.stars} size={18} />
-                    
-              <div className="product-rating-count link-primary">{ product.rating.count}</div>
+                    {/* <img
+                className="product-rating-stars"
+                src={`images/ratings/rating-${product.rating.stars * 10}.png`}
+                    /> */}
+                    <div className="product-rating-count link-primary">
+                        {product.rating.count}
+                    </div>
                 </div>
 
                 <div className="product-price">
@@ -72,13 +85,10 @@ function HomePage() {
         <>
             <title>Ecommerce Project</title>
             <link rel="icon" type="image/svg+xml" href="/home-favicon.png" />
-            <Header />
+            <Header cart={cart} />
 
             <div className="home-page">
-                <div className="products-grid">
-                    {productsList}
-                 
-                </div>
+                <div className="products-grid">{productsList}</div>
             </div>
         </>
     );
