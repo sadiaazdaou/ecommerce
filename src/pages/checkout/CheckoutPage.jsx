@@ -7,6 +7,7 @@ import { formatMoney } from "../../utils/money";
 
 function CheckoutPage({ cart = [] }) {
     const [deliveryOptions, setDeliveryOptions] = useState([]);
+    const [paymentSummary, setPaymentSummary] = useState(null);
 
     useEffect(() => {
         axios
@@ -14,6 +15,10 @@ function CheckoutPage({ cart = [] }) {
             .then((response) => {
                 setDeliveryOptions(response.data);
             });
+        axios.get("/api/payment-summary").then((response) => {
+            setPaymentSummary(response.data);
+            console.log(paymentSummary);
+        });
     }, []);
 
     return (
@@ -96,7 +101,9 @@ function CheckoutPage({ cart = [] }) {
                                                         }
 
                                                         return (
-                                                            <div className="delivery-option">
+                                                            <div
+                                                                key={`${cartItem.productId}-${deliveryOption.id}`}
+                                                                className="delivery-option">
                                                                 <input
                                                                     type="radio"
                                                                     checked={
@@ -137,28 +144,46 @@ function CheckoutPage({ cart = [] }) {
                         </div>
 
                         <div className="payment-summary-row">
-                            <div>Items (3):</div>
-                            <div className="payment-summary-money">$42.75</div>
+                            <div>Items {paymentSummary?.totalItems ?? 0}:</div>
+                            <div className="payment-summary-money">
+                                {formatMoney(
+                                    paymentSummary?.productCostCents ?? 0
+                                )}
+                            </div>
                         </div>
 
                         <div className="payment-summary-row">
                             <div>Shipping &amp; handling:</div>
-                            <div className="payment-summary-money">$4.99</div>
+                            <div className="payment-summary-money">
+                                {formatMoney(
+                                    paymentSummary?.shippingCostCents ?? 0
+                                )}
+                            </div>
                         </div>
 
                         <div className="payment-summary-row subtotal-row">
                             <div>Total before tax:</div>
-                            <div className="payment-summary-money">$47.74</div>
+                            <div className="payment-summary-money">
+                                {formatMoney(
+                                    paymentSummary?.totalCostBeforeTaxCents ?? 0
+                                )}
+                            </div>
                         </div>
 
                         <div className="payment-summary-row">
                             <div>Estimated tax (10%):</div>
-                            <div className="payment-summary-money">$4.77</div>
+                            <div className="payment-summary-money">
+                                {formatMoney(paymentSummary?.taxCents ?? 0)}
+                            </div>
                         </div>
 
                         <div className="payment-summary-row total-row">
                             <div>Order total:</div>
-                            <div className="payment-summary-money">$52.51</div>
+                            <div className="payment-summary-money">
+                                {formatMoney(
+                                    paymentSummary?.totalCostCents ?? 0
+                                )}
+                            </div>
                         </div>
 
                         <button className="place-order-button button-primary">
