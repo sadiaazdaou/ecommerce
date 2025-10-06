@@ -5,14 +5,13 @@ import CartIcon from "../assets/images/icons/cart-icon.png";
 import SearchIcon from "../assets/images/icons/search-icon.png";
 import "./Header.css";
 
-function Header({ cart = [] }) {
+function Header({ cart }) {
     const [quantity, setQuantity] = useState(0);
     useEffect(() => {
         // guard in case cart is empty
         if (Array.isArray(cart) && cart.length > 0) {
             cart.forEach((ele) => {
-                setQuantity(prev => prev += ele.quantity);
-                console.log(quantity);
+                setQuantity((prev) => (prev += ele.quantity));
             });
         } else {
             console.log("cart is empty or not provided");

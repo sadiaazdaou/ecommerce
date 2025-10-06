@@ -4,15 +4,18 @@ import axios from "axios";
 import "./HomePage.css";
 import Checkmark from "../assets/images/icons/checkmark.png";
 import RatingStars from "../components/RatingStars";
+import { formatMoney } from "../utils/money";
 
-function HomePage() {
+function HomePage({ cart }) {
+    console.log(formatMoney("20"));
     const [products, setProducts] = useState([]);
-    const [cart, setCart] = useState([]);
+    // const [cart, setCart] = useState([]);
 
     useEffect(() => {
         axios.get("/api/products").then((response) => {
             setProducts(response.data);
         });
+        //fetch request
         // fetch("http://localhost:3000/api/products")
         //     .then((res) => res.json())
         //     .then((data) => {
@@ -20,10 +23,10 @@ function HomePage() {
         //         console.log(data);
         //     })
         //     .catch((err) => console.log(err));
-        axios.get("/api/cart-items").then((response) => {
-            setCart(response.data);
-            console.log(response.data);
-        });
+        // axios.get("/api/cart-items").then((response) => {
+        //     setCart(response.data);
+        //     console.log(response.data);
+        // });
     }, []);
 
     const productsList = products.map((product) => {
@@ -49,7 +52,7 @@ function HomePage() {
                 </div>
 
                 <div className="product-price">
-                    {(product.priceCents / 100).toFixed(2)}
+                    {formatMoney(product.priceCents)}
                 </div>
 
                 <div className="product-quantity-container">
