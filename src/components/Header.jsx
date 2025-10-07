@@ -1,22 +1,15 @@
 import { Link, NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
+// no local hooks required
 import LogoWhite from "../assets/images/logo-white.png";
 import CartIcon from "../assets/images/icons/cart-icon.png";
 import SearchIcon from "../assets/images/icons/search-icon.png";
 import "./Header.css";
 
-function Header({ cart }) {
-    const [quantity, setQuantity] = useState(0);
-    useEffect(() => {
-        // guard in case cart is empty
-        if (Array.isArray(cart) && cart.length > 0) {
-            cart.forEach((ele) => {
-                setQuantity((prev) => (prev += ele.quantity));
-            });
-        } else {
-            console.log("cart is empty or not provided");
-        }
-    }, [cart]);
+function Header({ cart = [] }) {
+    // compute total quantity from cart prop; derived from props so no local accumulation
+    const quantity = Array.isArray(cart)
+        ? cart.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0)
+        : 0;
     return (
         <div className="header">
             <div className="left-section">

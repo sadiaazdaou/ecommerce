@@ -138,10 +138,18 @@
   align-items: center;
   margin-bottom: 8px;
 
-  /* At first, the "Added to cart" message will
-     be invisible. Use JavaScript to change the
-     opacity and make it visible. */
-  opacity: 0;
+  /* When the element is added to the DOM we want it
+     to fade in. The component only renders this node
+     while `justAdded` is true, so animate opacity and
+     a small slide for better visibility. */
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+/* Slightly separate the added message from the button on small displays */
+.home-page .product-container .added-to-cart {
+  margin-bottom: 10px;
 }
 
 .home-page .added-to-cart img {

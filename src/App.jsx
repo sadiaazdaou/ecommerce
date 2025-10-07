@@ -6,24 +6,27 @@ import { OrdersPage } from "./pages/OrdersPage";
 import { TrackingPage } from "./pages/TrackingPage";
 
 import "./App.css";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/home/HomePage";
 import { Error404 } from "./pages/Error404";
 
 function App() {
     const [cart, setCart] = useState([]);
-
+ 
+ 
+  const loadCarts = async () => {
+     const response = await axios.get("/api/cart-items?expand=product");
+     setCart(response.data);
+ };
     useEffect(() => {
-        axios.get("/api/cart-items?expand=product").then((response) => {
-            setCart(response.data);
-            console.log(response.data);
-        });
+       
+        loadCarts();
     }, []);
 
     return (
         <>
             <link rel="icon" type="image/svg+xml" href="/home-favicon.png" />
             <Routes>
-                <Route index element={<HomePage cart={cart} />} />
+          <Route index element={<HomePage cart={cart} loadCarts={ loadCarts} />} />
                 <Route
                     path="/checkout"
                     element={<CheckoutPage cart={cart} />}
