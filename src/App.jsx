@@ -28,7 +28,7 @@ function App() {
                     path="/checkout"
                     element={<CheckoutPage cart={cart} />}
                 />
-                <Route path="/orders" element={<OrdersPage />} />
+                <Route path="/orders" element={<OrdersPage cart={cart} />} />
                 <Route path="/tracking" element={<TrackingPage />} />
                 <Route path="*" element={<Error404 />} />
             </Routes>
