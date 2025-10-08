@@ -43,7 +43,7 @@ function Product({ product, loadCarts }) {
     return (
         <div className="product-container">
             <div className="product-image-container">
-                <img className="product-image" src={product.image} />
+                <img className="product-image" src={product.image} data-testId="product-image"/>
             </div>
 
             <div className="product-name limit-text-to-2-lines">
