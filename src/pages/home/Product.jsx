@@ -41,12 +41,13 @@ function Product({ product, loadCarts }) {
         setQuantity(selectedQuantity);
     };
     return (
-        <div className="product-container">
+      <div className="product-container"
+      data-testid = "product-container">
             <div className="product-image-container">
                 <img
                     className="product-image"
                     src={product.image}
-                    data-testId="product-image"
+                    data-testid="product-image"
                 />
             </div>
 
