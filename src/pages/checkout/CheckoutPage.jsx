@@ -1,13 +1,19 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate} from 'react-router'
 import dayjs, { Dayjs } from "dayjs";
 import "./CheckoutPage.css";
 import { CheckoutHeader } from "./CheckoutHeader";
 import { formatMoney } from "../../utils/money";
 
-function CheckoutPage({ cart = [] }) {
+function CheckoutPage({ cart = [], loadCarts }) {
+
+    const navigate = useNavigate()
     const [deliveryOptions, setDeliveryOptions] = useState([]);
     const [paymentSummary, setPaymentSummary] = useState(null);
+    // track which cart item is being edited and its temporary quantity
+    const [editingProductId, setEditingProductId] = useState(null);
+    const [editingQuantity, setEditingQuantity] = useState(1);
 
     useEffect(() => {
         axios
@@ -17,9 +23,9 @@ function CheckoutPage({ cart = [] }) {
             });
         axios.get("/api/payment-summary").then((response) => {
             setPaymentSummary(response.data);
-            console.log(paymentSummary);
+            console.log(response.data);
         });
-    }, []);
+    }, [cart]);
 
     return (
         <>
@@ -39,6 +45,48 @@ function CheckoutPage({ cart = [] }) {
                                             deliveryOption.id ===
                                             cartItem.deliveryOptionId
                                     );
+                                const isEditing =
+                                    editingProductId === cartItem.productId;
+                                const startEdit = () => {
+                                    setEditingProductId(cartItem.productId);
+                                    setEditingQuantity(
+                                        Number(cartItem.quantity) || 1
+                                    );
+                                };
+                                const cancelEdit = () => {
+                                    setEditingProductId(null);
+                                    setEditingQuantity(1);
+                                };
+                                const saveEdit = async () => {
+                                    const qty = Number(editingQuantity) || 1;
+                                    try {
+                                        await axios.put(
+                                            `/api/cart-items/${cartItem.productId}`,
+                                            { quantity: qty }
+                                        );
+                                        await loadCarts();
+                                    } catch (err) {
+                                        console.error(
+                                            "Failed to update quantity",
+                                            err
+                                        );
+                                        const serverMsg =
+                                            err?.response?.data || err?.message;
+                                        alert(
+                                            "Failed to update quantity: " +
+                                                (serverMsg?.message ||
+                                                    JSON.stringify(serverMsg))
+                                        );
+                                    } finally {
+                                        cancelEdit();
+                                    }
+                                };
+                                const deleteCartItem = async () => {
+                                    await axios.delete(
+                                        `/api/cart-items/${cartItem.productId}`
+                                    );
+                                    await loadCarts();
+                                };
                                 return (
                                     <div
                                         key={cartItem.productId}
@@ -70,15 +118,88 @@ function CheckoutPage({ cart = [] }) {
                                                     <span>
                                                         Quantity:{" "}
                                                         <span className="quantity-label">
-                                                            {cartItem.quantity}
+                                                            {!isEditing ? (
+                                                                cartItem.quantity
+                                                            ) : (
+                                                                <select
+                                                                    value={
+                                                                        editingQuantity
+                                                                    }
+                                                                    onChange={(
+                                                                        e
+                                                                    ) =>
+                                                                        setEditingQuantity(
+                                                                            Number(
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            )
+                                                                        )
+                                                                    }>
+                                                                    {Array.from(
+                                                                        {
+                                                                            length: 10,
+                                                                        },
+                                                                        (
+                                                                            _,
+                                                                            i
+                                                                        ) =>
+                                                                            i +
+                                                                            1
+                                                                    ).map(
+                                                                        (n) => (
+                                                                            <option
+                                                                                key={
+                                                                                    n
+                                                                                }
+                                                                                value={
+                                                                                    n
+                                                                                }>
+                                                                                {
+                                                                                    n
+                                                                                }
+                                                                            </option>
+                                                                        )
+                                                                    )}
+                                                                </select>
+                                                            )}
                                                         </span>
                                                     </span>
-                                                    <span className="update-quantity-link link-primary">
-                                                        Update
-                                                    </span>
-                                                    <span className="delete-quantity-link link-primary">
-                                                        Delete
-                                                    </span>
+                                                    {!isEditing ? (
+                                                        <>
+                                                            <span
+                                                                onClick={
+                                                                    startEdit
+                                                                }
+                                                                className="update-quantity-link link-primary">
+                                                                Update
+                                                            </span>
+                                                            <span
+                                                                onClick={
+                                                                    deleteCartItem
+                                                                }
+                                                                className="delete-quantity-link link-primary">
+                                                                Delete
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <span
+                                                                onClick={
+                                                                    saveEdit
+                                                                }
+                                                                className="update-quantity-link link-primary">
+                                                                Save
+                                                            </span>
+                                                            <span
+                                                                onClick={
+                                                                    cancelEdit
+                                                                }
+                                                                className="delete-quantity-link link-primary">
+                                                                Cancel
+                                                            </span>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
 
@@ -100,11 +221,26 @@ function CheckoutPage({ cart = [] }) {
                                                             )} - Shipping`;
                                                         }
 
+                                                        const updateDeliveryOption =
+                                                            async () => {
+                                                                await axios.put(
+                                                                    `/api/cart-items/${cartItem.productId}`,
+                                                                    {
+                                                                        deliveryOptionId:
+                                                                            deliveryOption.id,
+                                                                    }
+                                                                );
+                                                                await loadCarts();
+                                                            };
                                                         return (
                                                             <div
                                                                 key={`${cartItem.productId}-${deliveryOption.id}`}
-                                                                className="delivery-option">
+                                                                className="delivery-option"
+                                                                onClick={
+                                                                    updateDeliveryOption
+                                                                }>
                                                                 <input
+                                                                    onChange={() => {}}
                                                                     type="radio"
                                                                     checked={
                                                                         deliveryOption.id ===
@@ -186,7 +322,15 @@ function CheckoutPage({ cart = [] }) {
                             </div>
                         </div>
 
-                        <button className="place-order-button button-primary">
+                        <button
+                            onClick={async () => {
+                                await axios.post("/api/orders");
+                                await loadCarts()
+                                navigate('/orders')
+                            }
+                            
+                            }
+                            className="place-order-button button-primary">
                             Place your order
                         </button>
                     </div>

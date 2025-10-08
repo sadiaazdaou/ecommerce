@@ -26,10 +26,13 @@ function App() {
         <>
             <link rel="icon" type="image/svg+xml" href="/home-favicon.png" />
             <Routes>
-          <Route index element={<HomePage cart={cart} loadCarts={ loadCarts} />} />
+                <Route
+                    index
+                    element={<HomePage cart={cart} loadCarts={loadCarts} />}
+                />
                 <Route
                     path="/checkout"
-                    element={<CheckoutPage cart={cart} />}
+                    element={<CheckoutPage cart={cart} loadCarts={loadCarts} />}
                 />
                 <Route path="/orders" element={<OrdersPage cart={cart} />} />
                 <Route path="/tracking" element={<TrackingPage />} />
